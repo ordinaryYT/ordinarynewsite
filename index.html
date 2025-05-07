@@ -2,168 +2,241 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Fortnite Lobby Bot Creator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fortnite Lobby Bot</title>
   <style>
-    body { font-family: Arial; padding: 20px; background: #f2f2f2; }
-    .section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 10px; }
-    .bot { margin: 5px 0; }
-    .mod-dashboard, .user-dashboard { display: none; }
-    .btn { padding: 8px 12px; margin-top: 10px; cursor: pointer; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      color: #333;
+    }
+    input, select, button {
+      padding: 8px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .toggle-link {
+      color: #007bff;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .toggle-link:hover {
+      text-decoration: underline;
+    }
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
+  <div class="container">
+    <!-- User Dashboard -->
+    <div id="user-dashboard">
+      <h1>Fortnite Lobby Bot</h1>
+      <label>Username: <input id="username" type="text"></label>
+      <p>Points: <span id="points">0</span></p>
+      <h2>Create Bot</h2>
+      <input id="bot-username" type="text" placeholder="Bot Username">
+      <select id="preset">
+        <option value="Skin1">Skin1</option>
+        <option value="Skin2">Skin2</option>
+        <option value="Skin3">Skin3</option>
+      </select>
+      <button onclick="createBot()">Create Bot (250 Points)</button>
+      <h2>Your Bots</h2>
+      <ul id="bot-list"></ul>
+      <p><span class="toggle-link" onclick="toggleDashboard()">Switch to Moderator Dashboard</span></p>
+    </div>
 
-  <h1>Fortnite Lobby Bot Creator</h1>
-
-  <!-- User Login -->
-  <div class="section">
-    <label>Username: <input type="text" id="userNameInput"></label>
-    <button onclick="login()">Login</button>
-  </div>
-
-  <!-- User Dashboard -->
-  <div class="section user-dashboard" id="userDashboard">
-    <h2>Welcome, <span id="userName"></span></h2>
-    <p>Points: <span id="points">0</span></p>
-    <p>You may create up to 2 private bots. Each costs 250 points.</p>
-
-    <div id="botList"></div>
-
-    <h3>Create New Bot</h3>
-    <input type="text" id="botUsername" placeholder="Bot Username">
-    <select id="preset">
-      <option value="preset1">Preset 1</option>
-      <option value="preset2">Preset 2</option>
-      <option value="preset3">Preset 3</option>
-    </select>
-    <button class="btn" onclick="createBot()">Create Bot</button>
-  </div>
-
-  <!-- Mod Dashboard -->
-  <div class="section mod-dashboard" id="modDashboard">
-    <h2>Moderator Dashboard</h2>
-    <div id="pendingBots"></div>
-  </div>
-
-  <!-- Public Bots -->
-  <div class="section">
-    <h2>75 Public Bots</h2>
-    <div id="publicBots"></div>
+    <!-- Moderator Dashboard -->
+    <div id="mod-dashboard" class="hidden">
+      <h1>Moderator Dashboard</h1>
+      <h2>Pending Bots</h2>
+      <ul id="pending-bots"></ul>
+      <p><span class="toggle-link" onclick="toggleDashboard()">Back to User Dashboard</span></p>
+    </div>
   </div>
 
   <script>
-    let user = null;
-    let userPoints = 0;
-    let userBots = [];
-    let allBots = [];
-    let interval;
+    // Initialize state from localStorage or set defaults
+    let state = JSON.parse(localStorage.getItem('fortniteBotState')) || {
+      username: '',
+      points: 0,
+      bots: [],
+      pendingBots: []
+    };
 
-    const publicBots = Array.from({ length: 75 }, (_, i) => `OGsbot${i + 1}`);
-    const mods = ["admin"]; // You can change/add mod usernames here
-
-    function saveUserData() {
-      localStorage.setItem(`points_${user}`, userPoints);
-      localStorage.setItem(`bots_${user}`, JSON.stringify(userBots));
-      localStorage.setItem(`allBots`, JSON.stringify(allBots));
-    }
-
-    function loadUserData() {
-      const savedPoints = localStorage.getItem(`points_${user}`);
-      const savedBots = localStorage.getItem(`bots_${user}`);
-      const savedAll = localStorage.getItem(`allBots`);
-
-      if (savedPoints) userPoints = parseInt(savedPoints);
-      if (savedAll) allBots = JSON.parse(savedAll);
-      if (savedBots) userBots = JSON.parse(savedBots);
-      else userBots = allBots.filter(bot => bot.owner === user);
-    }
-
-    function login() {
-      const name = document.getElementById('userNameInput').value.trim();
-      if (!name) return alert("Enter username.");
-      user = name;
-
-      document.getElementById('userName').textContent = user;
-      document.querySelector('.user-dashboard').style.display = 'block';
-
-      if (mods.includes(user)) {
-        document.querySelector('.mod-dashboard').style.display = 'block';
-      }
-
-      loadUserData();
-      updateUI();
-
-      if (interval) clearInterval(interval);
-      interval = setInterval(() => {
-        userPoints += 3;
-        saveUserData();
-        updateUI();
-      }, 60000);
-
-      // Show immediate update without waiting a minute
-      updateUI();
-    }
-
-    function createBot() {
-      if (userBots.length >= 2) return alert("Max 2 private bots.");
-      if (userPoints < 250) return alert("Not enough points.");
-      const botName = document.getElementById('botUsername').value.trim();
-      const preset = document.getElementById('preset').value;
-
-      if (!botName) return alert("Enter a bot username.");
-
-      userPoints -= 250;
-      const bot = {
-        owner: user,
-        name: botName,
-        preset,
-        status: "being_created"
-      };
-      allBots.push(bot);
-      userBots.push(bot);
-      saveUserData();
-      updateUI();
-    }
-
-    function approveBot(index) {
-      allBots[index].status = "created";
-      saveUserData();
-      updateUI();
-    }
-
-    function updateUI() {
-      document.getElementById('points').textContent = userPoints;
-
-      // User Bot List
-      const botList = document.getElementById('botList');
-      botList.innerHTML = `<h4>Your Bots</h4>`;
-      userBots = allBots.filter(bot => bot.owner === user);
-      userBots.forEach(bot => {
-        botList.innerHTML += `<div class="bot">${bot.name} - ${bot.status === "being_created" ? "Bot being created" : "Bot created"} (${bot.preset})</div>`;
-      });
-
-      // Mod View
-      if (mods.includes(user)) {
-        const pending = document.getElementById('pendingBots');
-        pending.innerHTML = `<h3>Pending Bots</h3>`;
-        allBots.forEach((bot, index) => {
-          if (bot.status === "being_created") {
-            pending.innerHTML += `<div>${bot.name} by ${bot.owner} [${bot.preset}]
-              <button onclick="approveBot(${index})">Approve</button></div>`;
-          }
+    // Initialize public bots if not already in state
+    if (!state.bots.some(bot => bot.isPublic)) {
+      for (let i = 1; i <= 75; i++) {
+        state.bots.push({
+          username: `OGsbot${i}`,
+          preset: 'Skin1',
+          isPublic: true,
+          status: 'created'
         });
       }
-
-      // Public Bots
-      const pubBots = document.getElementById('publicBots');
-      pubBots.innerHTML = publicBots.map(bot => `<div>${bot}</div>`).join('');
     }
 
-    // Load public bots on initial page load
-    window.onload = function () {
-      const pubBots = document.getElementById('publicBots');
-      pubBots.innerHTML = publicBots.map(bot => `<div>${bot}</div>`).join('');
-    };
+    // Save state to localStorage
+    function saveState() {
+      localStorage.setItem('fortniteBotState', JSON.stringify(state));
+    }
+
+    // DOM elements
+    const usernameInput = document.getElementById('username');
+    const pointsDisplay = document.getElementById('points');
+    const botUsernameInput = document.getElementById('bot-username');
+    const presetSelect = document.getElementById('preset');
+    const botList = document.getElementById('bot-list');
+    const pendingBotsList = document.getElementById('pending-bots');
+
+    // Load initial state
+    usernameInput.value = state.username;
+    pointsDisplay.textContent = state.points;
+    loadBots();
+
+    // Update username
+    usernameInput.addEventListener('input', () => {
+      state.username = usernameInput.value;
+      saveState();
+      loadBots();
+    });
+
+    // Update points every minute
+    setInterval(() => {
+      if (!state.username) return;
+      state.points += 3;
+      pointsDisplay.textContent = state.points;
+      saveState();
+    }, 60000);
+
+    // Toggle dashboards
+    function toggleDashboard() {
+      document.getElementById('user-dashboard').classList.toggle('hidden');
+      document.getElementById('mod-dashboard').classList.toggle('hidden');
+      if (!document.getElementById('mod-dashboard').classList.contains('hidden')) {
+        loadPendingBots();
+      } else {
+        loadBots();
+      }
+    }
+
+    // Load bots (private and public)
+    function loadBots() {
+      if (!state.username) {
+        botList.innerHTML = '';
+        return;
+      }
+      botList.innerHTML = '';
+      state.bots.forEach(bot => {
+        if (bot.isPublic || bot.user === state.username) {
+          const li = document.createElement('li');
+          li.textContent = `${bot.username} - ${bot.preset} - ${bot.status}`;
+          botList.appendChild(li);
+        }
+      });
+      state.pendingBots.forEach(bot => {
+        if (bot.user === state.username) {
+          const li = document.createElement('li');
+          li.textContent = `${bot.username} - ${bot.preset} - ${bot.status}`;
+          botList.appendChild(li);
+        }
+      });
+    }
+
+    // Create bot
+    function createBot() {
+      const botUsername = botUsernameInput.value;
+      const preset = presetSelect.value;
+      if (!state.username || !botUsername) {
+        alert('Enter both username and bot username');
+        return;
+      }
+      if (state.bots.filter(b => b.user === state.username && !b.isPublic).length >= 2) {
+        alert('Max 2 private bots allowed');
+        return;
+      }
+      if (state.bots.some(b => b.username === botUsername) || state.pendingBots.some(b => b.username === botUsername)) {
+        alert('Bot username already taken');
+        return;
+      }
+      if (state.points < 250) {
+        alert('Need 250 points to create a bot');
+        return;
+      }
+      state.points -= 250;
+      pointsDisplay.textContent = state.points;
+      const bot = {
+        username: botUsername,
+        preset,
+        user: state.username,
+        status: 'pending'
+      };
+      state.pendingBots.push(bot);
+      botUsernameInput.value = '';
+      saveState();
+      alert('Bot Being Created');
+      loadBots();
+    }
+
+    // Load pending bots (moderator)
+    function loadPendingBots() {
+      pendingBotsList.innerHTML = '';
+      state.pendingBots.forEach(bot => {
+        const li = document.createElement('li');
+        li.textContent = `${bot.username} - ${bot.preset}`;
+        const approveBtn = document.createElement('button');
+        approveBtn.textContent = 'Approve';
+        approveBtn.onclick = () => approveBot(bot.username);
+        li.appendChild(approveBtn);
+        pendingBotsList.appendChild(li);
+      });
+    }
+
+    // Approve bot (moderator)
+    function approveBot(username) {
+      const bot = state.pendingBots.find(b => b.username === username);
+      if (!bot) {
+        alert('Bot not found');
+        return;
+      }
+      bot.status = 'created';
+      state.bots.push(bot);
+      state.pendingBots = state.pendingBots.filter(b => b.username !== username);
+      saveState();
+      alert('Bot Created');
+      loadPendingBots();
+    }
   </script>
 </body>
 </html>
