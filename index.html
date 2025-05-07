@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fortnite Lobby Bot</title>
+  <title>OGsbots - Fortnite Lobby Bots</title>
   <style>
     * {
       margin: 0;
@@ -164,12 +164,12 @@
   <div class="container">
     <!-- Home Page -->
     <div id="home" class="page active">
-      <h1>Fortnite Lobby Bot</h1>
-      <p>Welcome to the ultimate Fortnite lobby bot experience! Create custom bots for your lobbies or use our 75 public bots. Earn 3 points per minute to create private bots (250 points each, max 2 per user).</p>
+      <h1>Welcome to OGsbots</h1>
+      <p>Join the ultimate Fortnite lobby bot experience with OGsbots! Create custom bots for your lobbies or use our 75 public bots. Earn 3 points per minute to create private bots (250 points each, max 2 per user).</p>
       <div class="grid">
         <div class="card">
           <h3>Public Bots</h3>
-          <p>Explore 75 ready-to-use bots for your Fortnite lobbies.</p>
+          <p>Explore 75 ready-to-use OGsbots for your Fortnite lobbies.</p>
           <button onclick="showPage('public')">View Bots</button>
         </div>
         <div class="card">
@@ -183,20 +183,19 @@
     <!-- Public Bots Page -->
     <div id="public" class="page">
       <h1>Public Bots</h1>
-      <p>Add these bots as friends in Fortnite to join your lobby.</p>
+      <p>Add these OGsbots as friends in Fortnite to join your lobby.</p>
       <div id="public-bot-list" class="grid"></div>
     </div>
 
     <!-- Private Bots Page -->
     <div id="private" class="page">
       <h1>My Bots</h1>
-      <p>Create custom bots (250 points each, max 2). Choose a username and behavior preset.</p>
+      <p>Create custom OGsbots (250 points each, max 2). Choose a username and behavior preset.</p>
       <div class="create-bot">
         <input id="bot-username" type="text" placeholder="Bot Username">
         <select id="preset">
           <option value="Preset1">Preset 1: Auto Friend, Auto Invite, Playing</option>
-          <option value="Preset2">Preset 2: Auto Friend, Manual Invite, Online</option>
-          <option value="Preset3">Preset 3: Manual Friend, Auto Invite, Away</option>
+          <option value="Preset2">Preset 2: Manual Friend, Manual Invite, Offline</option>
         </select>
         <button onclick="createBot()">Create Bot (250 Points)</button>
       </div>
@@ -207,7 +206,7 @@
     <!-- Moderator Dashboard -->
     <div id="mod" class="page">
       <h1>Moderator Dashboard</h1>
-      <p>Approve pending bots to activate them for users.</p>
+      <p>Approve pending OGsbots to activate them for users.</p>
       <h2>Pending Bots</h2>
       <div id="pending-bots" class="grid"></div>
     </div>
@@ -215,7 +214,7 @@
 
   <script>
     // Initialize state from localStorage or set defaults
-    let state = JSON.parse(localStorage.getItem('fortniteBotState')) || {
+    let state = JSON.parse(localStorage.getItem('ogsBotsState')) || {
       username: '',
       points: 0,
       bots: [],
@@ -237,7 +236,7 @@
 
     // Save state to localStorage
     function saveState() {
-      localStorage.setItem('fortniteBotState', JSON.stringify(state));
+      localStorage.setItem('ogsBotsState', JSON.stringify(state));
     }
 
     // DOM elements
@@ -295,9 +294,7 @@
         case 'Preset1':
           return 'Auto Friend, Auto Invite, Playing Fortnite';
         case 'Preset2':
-          return 'Auto Friend, Manual Invite, Online';
-        case 'Preset3':
-          return 'Manual Friend, Auto Invite, Away';
+          return 'Manual Friend, Manual Invite, Offline';
         default:
           return preset;
       }
