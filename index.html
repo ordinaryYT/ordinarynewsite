@@ -12,16 +12,17 @@
       font-family: 'Arial', sans-serif;
     }
     body {
-      background: linear-gradient(135deg, #4b0082, #1e90ff);
+      background: #0a0a0a;
       color: #fff;
       min-height: 100vh;
     }
     .navbar {
-      background: rgba(0, 0, 0, 0.8);
-      padding: 15px 20px;
+      background: #1c1c1c;
+      padding: 10px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     }
     .navbar a {
       color: #fff;
@@ -31,7 +32,7 @@
       transition: color 0.3s;
     }
     .navbar a:hover {
-      color: #ffd700;
+      color: #a100ff;
     }
     .user-info {
       display: flex;
@@ -39,21 +40,19 @@
     }
     .user-info input, .user-info span {
       margin: 0 10px;
-      padding: 5px;
+      padding: 8px;
       border: none;
       border-radius: 5px;
+      background: #2a2a2a;
+      color: #fff;
     }
     .container {
-      max-width: 1000px;
+      max-width: 1200px;
       margin: 20px auto;
       padding: 20px;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-      color: #333;
     }
     h1, h2 {
-      color: #4b0082;
+      color: #a100ff;
       margin-bottom: 15px;
     }
     .page {
@@ -70,48 +69,61 @@
     input, select, button {
       padding: 10px;
       margin: 5px;
-      border: 1px solid #ccc;
+      border: none;
       border-radius: 5px;
       font-size: 14px;
+      background: #2a2a2a;
+      color: #fff;
+    }
+    select {
+      appearance: none;
+      background: #2a2a2a url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+      padding-right: 30px;
     }
     button {
-      background: #4b0082;
-      color: #fff;
-      border: none;
+      background: #a100ff;
       cursor: pointer;
       transition: background 0.3s;
     }
     button:hover {
-      background: #1e90ff;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-    li {
-      padding: 15px;
-      margin: 5px 0;
-      background: #f9f9f9;
-      border-radius: 5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      background: #7b00cc;
     }
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 10px;
+      gap: 15px;
     }
     .card {
-      background: #fff;
+      background: #1c1c1c;
       padding: 15px;
       border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
       text-align: center;
     }
     .bot-details {
       font-size: 12px;
-      color: #666;
+      color: #ccc;
+      margin-top: 5px;
+    }
+    .create-bot {
+      background: #2a2a2a;
+      padding: 20px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .create-bot input {
+      flex: 1;
+      min-width: 200px;
+    }
+    .create-bot select {
+      min-width: 200px;
+    }
+    .create-bot button {
+      flex-shrink: 0;
     }
     @media (max-width: 600px) {
       .navbar {
@@ -122,6 +134,9 @@
         margin: 5px 0;
       }
       .user-info {
+        flex-direction: column;
+      }
+      .create-bot {
         flex-direction: column;
       }
       .grid {
@@ -136,11 +151,11 @@
     <div>
       <a href="#" onclick="showPage('home')">Home</a>
       <a href="#" onclick="showPage('public')">Public Bots</a>
-      <a href="#" onclick="showPage('private')">Private Bots</a>
-      <a href="#" onclick="showModDashboard()">Moderator Dashboard</a>
+      <a href="#" onclick="showPage('private')">My Bots</a>
+      <a href="#" onclick="showModDashboard()">Moderator</a>
     </div>
     <div class="user-info">
-      <input id="username" type="text" placeholder="Enter Username">
+      <input id="username" type="text" placeholder="Username">
       <span>Points: <span id="points">0</span></span>
     </div>
   </div>
@@ -149,34 +164,34 @@
   <div class="container">
     <!-- Home Page -->
     <div id="home" class="page active">
-      <h1>Welcome to Fortnite Lobby Bot</h1>
-      <p>Create and manage Fortnite lobby bots with ease. Earn 3 points per minute to create private bots (250 points each, max 2 per user). Choose from bot presets to customize behavior, like auto-accepting friend requests or invites.</p>
+      <h1>Fortnite Lobby Bot</h1>
+      <p>Welcome to the ultimate Fortnite lobby bot experience! Create custom bots for your lobbies or use our 75 public bots. Earn 3 points per minute to create private bots (250 points each, max 2 per user).</p>
       <div class="grid">
         <div class="card">
           <h3>Public Bots</h3>
-          <p>Access 75 pre-made bots (OGsbot1–OGsbot75).</p>
+          <p>Explore 75 ready-to-use bots for your Fortnite lobbies.</p>
           <button onclick="showPage('public')">View Bots</button>
         </div>
         <div class="card">
-          <h3>Private Bots</h3>
-          <p>Create up to 2 bots with custom settings.</p>
+          <h3>My Bots</h3>
+          <p>Create up to 2 custom bots with tailored settings.</p>
           <button onclick="showPage('private')">Create Now</button>
         </div>
       </div>
     </div>
 
     <!-- Public Bots Page -->
-    <div id="public"_MAKE_PAGE">
+    <div id="public" class="page">
       <h1>Public Bots</h1>
-      <p>These bots are available to all users. Add them as friends in Fortnite to join your lobby.</p>
-      <ul id="public-bot-list" class="grid"></ul>
+      <p>Add these bots as friends in Fortnite to join your lobby.</p>
+      <div id="public-bot-list" class="grid"></div>
     </div>
 
     <!-- Private Bots Page -->
     <div id="private" class="page">
-      <h1>Private Bots</h1>
-      <p>Create your own bots (250 points each, max 2). Choose a username and preset for bot behavior.</p>
-      <div>
+      <h1>My Bots</h1>
+      <p>Create custom bots (250 points each, max 2). Choose a username and behavior preset.</p>
+      <div class="create-bot">
         <input id="bot-username" type="text" placeholder="Bot Username">
         <select id="preset">
           <option value="Preset1">Preset 1: Auto Friend, Auto Invite, Playing</option>
@@ -186,15 +201,15 @@
         <button onclick="createBot()">Create Bot (250 Points)</button>
       </div>
       <h2>Your Bots</h2>
-      <ul id="private-bot-list"></ul>
+      <div id="private-bot-list" class="grid"></div>
     </div>
 
     <!-- Moderator Dashboard -->
     <div id="mod" class="page">
       <h1>Moderator Dashboard</h1>
-      <p>Approve pending bots to make them available for use.</p>
+      <p>Approve pending bots to activate them for users.</p>
       <h2>Pending Bots</h2>
-      <ul id="pending-bots"></ul>
+      <div id="pending-bots" class="grid"></div>
     </div>
   </div>
 
@@ -292,33 +307,46 @@
     function loadPublicBots() {
       publicBotList.innerHTML = '';
       state.bots.filter(bot => bot.isPublic).forEach(bot => {
-        const li = document.createElement('li');
-        li.className = 'card';
-        li.innerHTML = `<strong>${bot.username}</strong><div class="bot-details">Settings: ${getPresetDetails(bot.preset)}<br>Status: ${bot.status}</div>`;
-        publicBotList.appendChild(li);
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+          <strong>${bot.username}</strong>
+          <div class="bot-details">
+            Settings: ${getPresetDetails(bot.preset)}<br>
+            Status: ${bot.status}
+          </div>
+        `;
+        publicBotList.appendChild(div);
       });
     }
 
     // Load private bots
     function loadPrivateBots() {
       if (!state.username) {
-        privateBotList.innerHTML = '<li>Please enter a username</li>';
+        privateBotList.innerHTML = '<div class="card">Please enter a username</div>';
         return;
       }
       privateBotList.innerHTML = '';
-      state.bots.filter(bot => bot.user === state.username && !bot.isPublic).forEach(bot => {
-        const li = document.createElement('li');
-        li.innerHTML = `<span>${bot.username} - ${getPresetDetails(bot.preset)} - ${bot.status}</span>`;
-        privateBotList.appendChild(li);
-      });
-      state.pendingBots.filter(bot => bot.user === state.username).forEach(bot => {
-        const li = document.createElement('li');
-        li.innerHTML = `<span>${bot.username} - ${getPresetDetails(bot.preset)} - ${bot.status}</span>`;
-        privateBotList.appendChild(li);
-      });
-      if (!privateBotList.children.length) {
-        privateBotList.innerHTML = '<li>No private bots yet</li>';
+      const userBots = [
+        ...state.bots.filter(bot => bot.user === state.username && !bot.isPublic),
+        ...state.pendingBots.filter(bot => bot.user === state.username)
+      ];
+      if (!userBots.length) {
+        privateBotList.innerHTML = '<div class="card">No private bots yet</div>';
+        return;
       }
+      userBots.forEach(bot => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+          <strong>${bot.username}</strong>
+          <div class="bot-details">
+            Settings: ${getPresetDetails(bot.preset)}<br>
+            Status: ${bot.status === 'pending' ? 'Bot Being Created' : 'Bot Created'}
+          </div>
+        `;
+        privateBotList.appendChild(div);
+      });
     }
 
     // Create bot
@@ -331,6 +359,10 @@
       }
       if (!botUsername.match(/^[a-zA-Z0-9]+$/)) {
         alert('Bot username must be alphanumeric');
+        return;
+      }
+      if (botUsername.length > 20) {
+        alert('Bot username must be 20 characters or less');
         return;
       }
       if (state.bots.filter(b => b.user === state.username && !b.isPublic).length >= 2) {
@@ -363,18 +395,26 @@
     // Load pending bots (moderator)
     function loadPendingBots() {
       pendingBotsList.innerHTML = '';
+      if (!state.pendingBots.length) {
+        pendingBotsList.innerHTML = '<div class="card">No pending bots</div>';
+        return;
+      }
       state.pendingBots.forEach(bot => {
-        const li = document.createElement('li');
-        li.innerHTML = `<span>${bot.username} - ${getPresetDetails(bot.preset)} - Pending</span>`;
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = `
+          <strong>${bot.username}</strong>
+          <div class="bot-details">
+            Settings: ${getPresetDetails(bot.preset)}<br>
+            Status: Pending
+          </div>
+        `;
         const approveBtn = document.createElement('button');
         approveBtn.textContent = 'Approve';
         approveBtn.onclick = () => approveBot(bot.username);
-        li.appendChild(approveBtn);
-        pendingBotsList.appendChild(li);
+        div.appendChild(approveBtn);
+        pendingBotsList.appendChild(div);
       });
-      if (!pendingBotsList.children.length) {
-        pendingBotsList.innerHTML = '<li>No pending bots</li>';
-      }
     }
 
     // Approve bot (moderator)
