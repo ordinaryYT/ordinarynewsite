@@ -125,7 +125,6 @@
     .create-bot button {
       flex-shrink: 0;
     }
-    /* Commands Page Table */
     .commands-table {
       width: 100%;
       border-collapse: collapse;
@@ -230,7 +229,7 @@
         <input id="bot-username" type="text" placeholder="Bot Username">
         <select id="preset">
           <option value="Preset1">Preset 1: Auto accept Friend requests, Auto accept Invites</option>
-          <option value="Preset2">Preset 2: Manualy accept Friend requests, Manualy accept Invites</option>
+          <option value="Preset2">Preset 2: Manually accept Friend requests, Manually accept Invites</option>
         </select>
         <button onclick="createBot()">Create Bot (250 Points)</button>
       </div>
@@ -254,7 +253,7 @@
           <tr>
             <td><code>emote</code></td>
             <td>Sets the bot's emote</td>
-            <td><code>emote &lt;emote_name&gt;</code></td>
+            <td><code>emote <emote_name></code></td>
           </tr>
           <tr>
             <td><code>all-items</code></td>
@@ -274,7 +273,7 @@
           <tr>
             <td><code>level</code></td>
             <td>Sets the bot's level</td>
-            <td><code>level &lt;number&gt;</code></td>
+            <td><code>level <number></code></td>
           </tr>
           <tr>
             <td><code>crowns</code></td>
@@ -385,9 +384,9 @@
     function getPresetDetails(preset) {
       switch (preset) {
         case 'Preset1':
-          return 'Auto Friend, Auto Invite, Playing Fortnite';
+          return 'Auto accept Friend requests, Auto accept Invites';
         case 'Preset2':
-          return 'Manual Friend, Manual Invite, Offline';
+          return 'Manually accept Friend requests, Manually accept Invites';
         default:
           return preset;
       }
@@ -422,7 +421,7 @@
         ...state.pendingBots.filter(bot => bot.user === state.username)
       ];
       if (!userBots.length) {
-        privateBotList.innerHTML = '<div class="card">No quedaba bots yet</div>';
+        privateBotList.innerHTML = '<div class="card">No private bots yet</div>';
         return;
       }
       userBots.forEach(bot => {
@@ -486,7 +485,7 @@
     function loadPendingBots() {
       pendingBotsList.innerHTML = '';
       if (!state.pendingBots.length) {
-        pendingBotsList.innerHTML = '<div class="card">No pending bots</div>';
+        privateBotList.innerHTML = '<div class="card">No private bots yet</div>';
         return;
       }
       state.pendingBots.forEach(bot => {
