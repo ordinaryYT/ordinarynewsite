@@ -125,6 +125,34 @@
     .create-bot button {
       flex-shrink: 0;
     }
+    /* Commands Page Table */
+    .commands-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1c1c1c;
+      border-radius: 5px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+    .commands-table th, .commands-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    .commands-table th {
+      background: #a100ff;
+      color: #fff;
+      font-weight: bold;
+    }
+    .commands-table tr:last-child td {
+      border-bottom: none;
+    }
+    .commands-table code {
+      background: #2a2a2a;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
     @media (max-width: 600px) {
       .navbar {
         flex-direction: column;
@@ -142,6 +170,12 @@
       .grid {
         grid-template-columns: 1fr;
       }
+      .commands-table {
+        font-size: 14px;
+      }
+      .commands-table th, .commands-table td {
+        padding: 8px;
+      }
     }
   </style>
 </head>
@@ -152,6 +186,7 @@
       <a href="#" onclick="showPage('home')">Home</a>
       <a href="#" onclick="showPage('public')">Public Bots</a>
       <a href="#" onclick="showPage('private')">My Bots</a>
+      <a href="#" onclick="showPage('commands')">Commands</a>
       <a href="#" onclick="showModDashboard()">Moderator</a>
     </div>
     <div class="user-info">
@@ -194,13 +229,70 @@
       <div class="create-bot">
         <input id="bot-username" type="text" placeholder="Bot Username">
         <select id="preset">
-          <option value="Preset1">Preset 1: Auto Friend, Auto Invite</option>
-          <option value="Preset2">Preset 2: Manual Friend, Manual Invite</option>
+          <option value="Preset1">Preset 1: Auto accept Friend requests, Auto accept Invites</option>
+          <option value="Preset2">Preset 2: Manualy accept Friend requests, Manualy accept Invites</option>
         </select>
         <button onclick="createBot()">Create Bot (250 Points)</button>
       </div>
       <h2>Your Bots</h2>
       <div id="private-bot-list" class="grid"></div>
+    </div>
+
+    <!-- Commands Page -->
+    <div id="commands" class="page">
+      <h1>OGsbots Commands</h1>
+      <p>Below is a list of available commands for OGsbots in Fortnite lobbies. Use these in the Fortnite chat to control your bots.</p>
+      <table class="commands-table">
+        <thead>
+          <tr>
+            <th>Command</th>
+            <th>Description</th>
+            <th>Usage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>emote</code></td>
+            <td>Sets the bot's emote</td>
+            <td><code>emote &lt;emote_name&gt;</code></td>
+          </tr>
+          <tr>
+            <td><code>all-items</code></td>
+            <td>Shows all cosmetics in the game, optional filter, stop with "stop"</td>
+            <td><code>all-items [filter]</code></td>
+          </tr>
+          <tr>
+            <td><code>mimic</code></td>
+            <td>Copies cosmetics or actions of a user, stop with "stop"</td>
+            <td><code>mimic [All | Changes | Outfits | Emotes] [Member name or ID]</code></td>
+          </tr>
+          <tr>
+            <td><code>stop</code></td>
+            <td>Stops ongoing commands like emote or mimic</td>
+            <td><code>stop</code></td>
+          </tr>
+          <tr>
+            <td><code>level</code></td>
+            <td>Sets the bot's battle pass level</td>
+            <td><code>level &lt;number&gt;</code></td>
+          </tr>
+          <tr>
+            <td><code>crowns</code></td>
+            <td>Displays or sets the bot's crown wins</td>
+            <td><code>crowns [number]</code></td>
+          </tr>
+          <tr>
+            <td><code>ready</code></td>
+            <td>Sets the bot to ready status for matchmaking</td>
+            <td><code>ready</code></td>
+          </tr>
+          <tr>
+            <td><code>unready</code></td>
+            <td>Sets the bot to unready status</td>
+            <td><code>unready</code></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- Moderator Dashboard -->
@@ -275,6 +367,7 @@
       document.getElementById(pageId).classList.add('active');
       if (pageId === 'public') loadPublicBots();
       if (pageId === 'private') loadPrivateBots();
+      if (pageId === 'commands') {} // Static page, no load needed
     }
 
     // Show moderator dashboard with password
@@ -329,7 +422,7 @@
         ...state.pendingBots.filter(bot => bot.user === state.username)
       ];
       if (!userBots.length) {
-        privateBotList.innerHTML = '<div class="card">No private bots yet</div>';
+        privateBotList.innerHTML = '<div class="card">No quedaba bots yet</div>';
         return;
       }
       userBots.forEach(bot => {
