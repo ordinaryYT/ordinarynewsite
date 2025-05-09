@@ -152,6 +152,31 @@
       border-radius: 3px;
       font-family: 'Courier New', monospace;
     }
+    /* New Countdown Section Styles */
+    .countdown-section {
+      background: #1c1c1c;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 20px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      border: 1px solid #a100ff;
+    }
+    .countdown-section h3 {
+      color: #a100ff;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .countdown-timer {
+      font-size: 24px;
+      font-family: 'Courier New', monospace;
+      color: #fff;
+      background: #2a2a2a;
+      padding: 10px;
+      border-radius: 5px;
+      display: inline-block;
+      letter-spacing: 2px;
+    }
     @media (max-width: 600px) {
       .navbar {
         flex-direction: column;
@@ -173,6 +198,16 @@
         font-size: 14px;
       }
       .commands-table th, .commands-table td {
+        padding: 8px;
+      }
+      .countdown-section {
+        padding: 10px;
+      }
+      .countdown-section h3 {
+        font-size: 18px;
+      }
+      .countdown-timer {
+        font-size: 18px;
         padding: 8px;
       }
     }
@@ -307,6 +342,11 @@
           </tr>
         </tbody>
       </table>
+      <!-- New Countdown Section -->
+      <div class="countdown-section">
+        <h3>5 New Commands Coming Soon!</h3>
+        <div class="countdown-timer" id="countdown-timer">Loading...</div>
+      </div>
     </div>
 
     <!-- Moderator Dashboard -->
@@ -353,6 +393,7 @@
     const publicBotList = document.getElementById('public-bot-list');
     const privateBotList = document.getElementById('private-bot-list');
     const pendingBotsList = document.getElementById('pending-bots');
+    const countdownTimer = document.getElementById('countdown-timer');
 
     // Load initial state
     usernameInput.value = state.username;
@@ -375,13 +416,46 @@
       saveState();
     }, 60000);
 
+    // Countdown Timer Logic
+    const oneWeekInSeconds = 604800; // 7 days in seconds
+    let countdownStart = localStorage.getItem('countdownStart');
+    if (!countdownStart) {
+      countdownStart = Math.floor(Date.now() / 1000); // Current time in seconds
+      localStorage.setItem('countdownStart', countdownStart);
+    }
+    countdownStart = parseInt(countdownStart);
+
+    function updateCountdown() {
+      const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+      const secondsElapsed = currentTime - countdownStart;
+      const secondsRemaining = oneWeekInSeconds - secondsElapsed;
+
+      if (secondsRemaining <= 0) {
+        countdownTimer.textContent = 'New Commands Available Now!';
+        return;
+      }
+
+      const days = Math.floor(secondsRemaining / (24 * 3600));
+      const hours = Math.floor((secondsRemaining % (24 * 3600)) / 3600);
+      const minutes = Math.floor((secondsRemaining % 3600) / 60);
+      const seconds = secondsRemaining % 60;
+
+      countdownTimer.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    // Update countdown every second
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
     // Show page
     function showPage(pageId) {
       document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
       document.getElementById(pageId).classList.add('active');
       if (pageId === 'public') loadPublicBots();
       if (pageId === 'private') loadPrivateBots();
-      if (pageId === 'commands') {} // Static page, no load needed
+      if (pageId === 'commands') {
+        updateCountdown(); // Ensure countdown is updated when Commands page is shown
+      }
     }
 
     // Show moderator dashboard with password
