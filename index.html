@@ -214,7 +214,7 @@
   </style>
 </head>
 <body>
-  <!-- Navigation Bar -->
+ 
   <div class="navbar">
     <div>
       <a href="#" onclick="showPage('home')">Home</a>
@@ -229,7 +229,7 @@
     </div>
   </div>
 
-  <!-- Pages -->
+ 
   <div class="container">
     <!-- Home Page -->
     <div id="home" class="page active">
@@ -249,7 +249,6 @@
       </div>
     </div>
 
-    <!-- Public Bots Page -->
     <div id="public" class="page">
       <h1>Public Bots</h1>
       <p>Add these OGsbots as friends in Fortnite to join your lobby.</p>
@@ -272,7 +271,6 @@
       <div id="private-bot-list" class="grid"></div>
     </div>
 
-    <!-- Commands Page -->
     <div id="commands" class="page">
       <h1>OGsbots Commands</h1>
       <p>Below is a list of available commands for OGsbots in Fortnite lobbies. Use these in the Fortnite chat to control your bots.</p>
@@ -342,14 +340,14 @@
           </tr>
         </tbody>
       </table>
-      <!-- New Countdown Section -->
+    
       <div class="countdown-section">
         <h3>5 New Commands Coming Soon!</h3>
         <div class="countdown-timer" id="countdown-timer">Loading...</div>
       </div>
     </div>
 
-    <!-- Moderator Dashboard -->
+   
     <div id="mod" class="page">
       <h1>Moderator Dashboard</h1>
       <p>Approve pending OGsbots to activate them for users.</p>
@@ -359,7 +357,7 @@
   </div>
 
   <script>
-    // Initialize state from localStorage or set defaults
+   
     let state = JSON.parse(localStorage.getItem('ogsBotsState')) || {
       username: '',
       points: 0,
@@ -367,7 +365,7 @@
       pendingBots: []
     };
 
-    // Initialize public bots if not in state
+   
     if (!state.bots.some(bot => bot.isPublic)) {
       for (let i = 1; i <= 75; i++) {
         state.bots.push({
@@ -380,12 +378,12 @@
       saveState();
     }
 
-    // Save state to localStorage
+    
     function saveState() {
       localStorage.setItem('ogsBotsState', JSON.stringify(state));
     }
 
-    // DOM elements
+   
     const usernameInput = document.getElementById('username');
     const pointsDisplay = document.getElementById('points');
     const botUsernameInput = document.getElementById('bot-username');
@@ -395,11 +393,11 @@
     const pendingBotsList = document.getElementById('pending-bots');
     const countdownTimer = document.getElementById('countdown-timer');
 
-    // Load initial state
+   
     usernameInput.value = state.username;
     pointsDisplay.textContent = state.points;
 
-    // Update username
+   
     usernameInput.addEventListener('input', () => {
       state.username = usernameInput.value.trim();
       saveState();
@@ -408,7 +406,7 @@
       }
     });
 
-    // Update points every minute
+   
     setInterval(() => {
       if (!state.username) return;
       state.points += 3;
@@ -416,7 +414,7 @@
       saveState();
     }, 60000);
 
-    // Countdown Timer Logic
+    
     const oneWeekInSeconds = 604800; // 7 days in seconds
     let countdownStart = localStorage.getItem('countdownStart');
     if (!countdownStart) {
@@ -443,11 +441,10 @@
       countdownTimer.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
     }
 
-    // Update countdown every second
+   
     updateCountdown();
     setInterval(updateCountdown, 1000);
 
-    // Show page
     function showPage(pageId) {
       document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
       document.getElementById(pageId).classList.add('active');
@@ -458,7 +455,7 @@
       }
     }
 
-    // Show moderator dashboard with password
+    
     function showModDashboard() {
       const password = prompt('Enter moderator password');
       if (password !== 'mod123') {
@@ -469,7 +466,6 @@
       loadPendingBots();
     }
 
-    // Get preset details
     function getPresetDetails(preset) {
       switch (preset) {
         case 'Preset1':
@@ -481,7 +477,7 @@
       }
     }
 
-    // Load public bots
+ 
     function loadPublicBots() {
       publicBotList.innerHTML = '';
       state.bots.filter(bot => bot.isPublic).forEach(bot => {
@@ -498,7 +494,7 @@
       });
     }
 
-    // Load private bots
+   
     function loadPrivateBots() {
       if (!state.username) {
         privateBotList.innerHTML = '<div class="card">Please enter a username</div>';
@@ -527,7 +523,7 @@
       });
     }
 
-    // Create bot
+    
     function createBot() {
       const botUsername = botUsernameInput.value.trim();
       const preset = presetSelect.value;
@@ -570,7 +566,6 @@
       loadPrivateBots();
     }
 
-    // Load pending bots (moderator)
     function loadPendingBots() {
       pendingBotsList.innerHTML = '';
       if (!state.pendingBots.length) {
@@ -595,7 +590,7 @@
       });
     }
 
-    // Approve bot (moderator)
+   
     function approveBot(username) {
       const bot = state.pendingBots.find(b => b.username === username);
       if (!bot) {
@@ -613,7 +608,6 @@
       }
     }
 
-    // Initial load
     showPage('home');
   </script>
 </body>
